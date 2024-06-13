@@ -22,7 +22,7 @@ if ss is not None:
 	acc.start()
 else: acc = None
 
-# download status
+# 下载状态函数
 def downstatus(statusfile,message):
 	while True:
 		if os.path.exists(statusfile):
@@ -39,7 +39,7 @@ def downstatus(statusfile,message):
 			time.sleep(5)
 
 
-# upload status
+# 上传状态函数
 def upstatus(statusfile,message):
 	while True:
 		if os.path.exists(statusfile):
@@ -56,24 +56,24 @@ def upstatus(statusfile,message):
 			time.sleep(5)
 
 
-# progress writter
+# 进度写入函数
 def progress(current, total, message, type):
 	with open(f'{message.id}{type}status.txt',"w") as fileup:
 		fileup.write(f"{current * 100 / total:.1f}%")
 
 
-# start command
+# 开始命令处理函数
 @bot.on_message(filters.command(["start"]))
 def send_start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-	bot.send_message(message.chat.id, f"__👋 Hi **{message.from_user.mention}**, I am Save Restricted Bot, I can send you restricted content by it's post link__\n\n{USAGE}",
-	reply_markup=InlineKeyboardMarkup([[ InlineKeyboardButton("🌐 Source Code", url="https://github.com/bipinkrish/Save-Restricted-Bot")]]), reply_to_message_id=message.id)
+	bot.send_message(message.chat.id, f"__👋 Hi **{message.from_user.mention}**, I am Save Restricted Bot\n你可以发送文件或受限内容的链接让我保存__\n\n{USAGE}",
+	reply_markup=InlineKeyboardMarkup([[ InlineKeyboardButton("🌐 源码仓库", url="https://github.com/gohj99/Save-Restricted-Bot")]]), reply_to_message_id=message.id)
 
 
 @bot.on_message(filters.text)
 def save(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
 	print(message.text)
 
-	# joining chats
+	# 加入聊天
 	if "https://t.me/+" in message.text or "https://t.me/joinchat/" in message.text:
 
 		if acc is None:
@@ -91,7 +91,7 @@ def save(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 		except InviteHashExpired:
 			bot.send_message(message.chat.id,"**Invalid Link**", reply_to_message_id=message.id)
 
-	# getting message
+	# 收到消息
 	elif "https://t.me/" in message.text:
 
 		datas = message.text.split("/")
@@ -102,7 +102,7 @@ def save(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 
 		for msgid in range(fromID, toID+1):
 
-			# private
+			# 私人的聊天
 			if "https://t.me/c/" in message.text:
 				chatid = int("-100" + datas[4])
 				
@@ -114,7 +114,7 @@ def save(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 				# try: handle_private(message,chatid,msgid)
 				# except Exception as e: bot.send_message(message.chat.id,f"**Error** : __{e}__", reply_to_message_id=message.id)
 			
-			# bot
+			# 机器人的聊天
 			elif "https://t.me/b/" in message.text:
 				username = datas[4]
 				
@@ -124,7 +124,7 @@ def save(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 				try: handle_private(message,username,msgid)
 				except Exception as e: bot.send_message(message.chat.id,f"**Error** : __{e}__", reply_to_message_id=message.id)
 
-			# public
+			# 公开的聊天
 			else:
 				username = datas[3]
 
@@ -144,11 +144,11 @@ def save(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 					try: handle_private(message,username,msgid)
 					except Exception as e: bot.send_message(message.chat.id,f"**Error** : __{e}__", reply_to_message_id=message.id)
 
-			# wait time
+			# 等待时间
 			time.sleep(3)
 
 
-# handle private
+# 处理私人的聊天
 def handle_private(message: pyrogram.types.messages_and_media.message.Message, chatid: int, msgid: int):
 		msg: pyrogram.types.messages_and_media.message.Message = acc.get_messages(chatid,msgid)
 		msg_type = get_message_type(msg)
@@ -157,7 +157,7 @@ def handle_private(message: pyrogram.types.messages_and_media.message.Message, c
 			bot.send_message(message.chat.id, msg.text, entities=msg.entities, reply_to_message_id=message.id)
 			return
 
-		smsg = bot.send_message(message.chat.id, '__Downloading__', reply_to_message_id=message.id)
+		smsg = bot.send_message(message.chat.id, '__下载中__', reply_to_message_id=message.id)
 		dosta = threading.Thread(target=lambda:downstatus(f'{message.id}downstatus.txt',smsg),daemon=True)
 		dosta.start()
 		file = acc.download_media(msg, progress=progress, progress_args=[message,"down"])
@@ -207,7 +207,7 @@ def handle_private(message: pyrogram.types.messages_and_media.message.Message, c
 		bot.delete_messages(message.chat.id,[smsg.id])
 
 
-# get the type of message
+# 获取消息类型
 def get_message_type(msg: pyrogram.types.messages_and_media.message.Message):
 	try:
 		msg.document.file_id
@@ -250,26 +250,26 @@ def get_message_type(msg: pyrogram.types.messages_and_media.message.Message):
 	except: pass
 
 
-USAGE = """**FOR PUBLIC CHATS**
+USAGE = """**对于公开聊天的文件**
 
-__just send post/s link__
+__只需发送相应链接__
 
-**FOR PRIVATE CHATS**
+**对于非公开聊天的文件**
 
-__first send invite link of the chat (unnecessary if the account of string session already member of the chat)
-then send post/s link__
+__首先发送聊天的邀请链接 (如果当前提供会话的帐户已经是聊天成员，则不需要发送邀请链接)
+然后发送链接__
 
-**FOR BOT CHATS**
+**对于机器人聊天**
 
-__send link with '/b/', bot's username and message id, you might want to install some unofficial client to get the id like below__
+__发送带有“/b/”的链接、机器人的用户名和消息 ID，你可能需要安装一些非官方客户端来获取如下所示的 ID__
 
 ```
 https://t.me/b/botusername/4321
 ```
 
-**MULTI POSTS**
+**如果你有多个文件**
 
-__send public/private posts link as explained above with formate "from - to" to send multiple messages like below__
+__发送公共/私人帖子链接，如上所述，使用格式“发件人 - 收件人”发送多条消息，如下所示__
 
 ```
 https://t.me/xxxx/1001-1010
@@ -277,9 +277,9 @@ https://t.me/xxxx/1001-1010
 https://t.me/c/xxxx/101 - 120
 ```
 
-__note that space in between doesn't matter__
+__最好在中间加上空格__
 """
 
 
-# infinty polling
+# 启动机器人（进入无限轮询）
 bot.run()
