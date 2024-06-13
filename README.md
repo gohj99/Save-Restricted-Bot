@@ -1,43 +1,40 @@
 # Save Restricted Bot
 
-*A Telegram Bot, Which can send you restricted content by it's post link*
+*一个用来保存受限内容的Telegram 机器人*
 
 ---
 
-## Variables
+## 变量
 
-- `HASH` Your API Hash from my.telegram.org
-- `ID` Your API ID from my.telegram.org
-- `TOKEN` Your bot token from @BotFather
-- `STRING` Your session string, you can get it at [gist](https://gist.github.com/bipinkrish/0940b30ed66a5537ae1b5aaaee716897#file-main-py) and run it locally
+- `HASH` 来自 my.telegram.org 的 API HASH
+- `ID` 来自 my.telegram.org 的 API ID
+- `TOKEN` 来自 @BotFather 的机器人TOKEN
+- `STRING` 会话字符串，您可以通过运行 [gist](https://gist.github.com/bipinkrish/0940b30ed66a5537ae1b5aaaee716897#file-main-py) 来获取
 
 ---
 
-# Usage
+# 用法
 
-__FOR PUBLIC CHATS__
+**对于公开聊天的文件**
 
-_just send post/s link_
+__只需发送相应链接__
 
+**对于非公开聊天的文件**
 
-__FOR PRIVATE CHATS__
+__首先发送聊天的邀请链接 (如果当前提供会话的帐户已经是聊天成员，则不需要发送邀请链接)
+然后发送链接__
 
-_first send invite link of the chat (unnecessary if the account of string session already member of the chat)
-then send post/s link_
+**对于机器人聊天**
 
-
-__FOR BOT CHATS__
-
-_send link with '/b/', bot's username and message id, you might want to install some unofficial client to get the id like below_
+__发送带有“/b/”的链接、机器人的用户名和消息 ID，你可能需要安装一些非官方客户端来获取如下所示的 ID__
 
 ```
 https://t.me/b/botusername/4321
 ```
 
-__MULTI POSTS__
+**如果你需要一次保存多个受限文件**
 
-_send public/private posts link as explained above with formate "from - to" to send multiple messages like below_
-
+__发送公共/私人帖子链接，如上所述，使用格式“发件人 - 收件人”发送多条消息，如下所示__
 
 ```
 https://t.me/xxxx/1001-1010
@@ -45,4 +42,4 @@ https://t.me/xxxx/1001-1010
 https://t.me/c/xxxx/101 - 120
 ```
 
-_note that space in between doesn't matter_
+__最好在中间加上空格__
