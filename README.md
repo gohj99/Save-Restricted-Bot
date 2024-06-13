@@ -1,6 +1,6 @@
 # Save Restricted Bot
 
-*一个用来保存受限内容的Telegram 机器人*
+*一个用来保存受限内容的Telegram 机器人（简体中文版）*
 
 ---
 
